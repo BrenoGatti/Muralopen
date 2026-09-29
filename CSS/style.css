@@ -368,3 +368,56 @@ td.vip {
   opacity: 0.9;
   filter: grayscale(0%);
 }
+/* =========================================
+   13.AJUSTE RESPONSIVO PARA CELULARES
+   ========================================= */
+@media (max-width: 700px) {
+  .page {
+    padding: 12px;
+  }
+  
+  /* Arrumando o Cabeçalho (Header) */
+  .top {
+    flex-direction: column; /* Coloca um embaixo do outro */
+    align-items: center;    /* Centraliza na tela */
+    text-align: center;
+    gap: 15px;              /* Dá um respiro entre os blocos */
+  }
+
+  /* Traz a logo para o topo absoluto */
+  .logo {
+    order: -1;              /* O truque mágico: move a logo para o 1º lugar */
+    max-height: 50px;
+    margin-bottom: 5px;
+  }
+
+  /* Organiza o título e o aviãozinho */
+  .brand {
+    flex-direction: column; /* Coloca o avião em cima do título */
+    gap: 5px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  /* Ajusta o relógio para não vazar a tela */
+  .clock-container {
+    margin: 5px 0 15px 0;
+    width: 100%;
+    max-width: 280px;       /* Evita que fique muito esticado */
+  }
+
+  /* Mantém a tabela com scroll lateral (arraste) */
+  .day {
+    overflow-x: auto;
+  }
+  
+  table {
+    min-width: 950px;
+  }
+  
+  .side {
+    margin-bottom: 15px;
+  }
+}
