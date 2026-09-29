@@ -66,3 +66,14 @@ function destacarDiaAtual() {
         }
     }
 }
+// Efeito de encolher o cabeçalho ao rolar a página (Scroll)
+window.addEventListener('scroll', () => {
+    const headerTop = document.querySelector('.top');
+    
+    // Se a rolagem vertical for maior que 50 pixels, ativa o modo compacto
+    if (window.scrollY > 50) {
+        headerTop.classList.add('compacto');
+    } else {
+        headerTop.classList.remove('compacto');
+    }
+});

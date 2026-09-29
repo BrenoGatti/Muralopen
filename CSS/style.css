@@ -421,3 +421,54 @@ td.vip {
     margin-bottom: 15px;
   }
 }
+/* =========================================
+   CABEÇALHO FIXO COM EFEITO DE ENCOLHIMENTO
+   ========================================= */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--bg); /* Fundo igual ao da página para tampar o que passa por baixo */
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 4px 12px rgba(23, 54, 93, 0.08);
+  transition: all 0.3s ease; /* Transição suave ao encolher */
+}
+
+/* Estado compacto (ativado via JavaScript quando rolar a página) */
+.top.compacto {
+  padding: 8px 10px;
+  background-color: rgba(244, 247, 250, 0.95); /* Levemente transparente */
+  backdrop-filter: blur(5px); /* Efeito vidro fosco */
+}
+
+/* Ajustes de tamanho quando o cabeçalho encolher no computador */
+.top.compacto .logo {
+  max-height: 35px; /* Reduz o logo */
+  transition: max-height 0.3s ease;
+}
+
+.top.compacto h1 {
+  font-size: 20px; /* Reduz o título */
+  transition: font-size 0.3s ease;
+}
+
+.top.compacto .subtitle {
+  display: none; /* Esconde o subtítulo para economizar espaço vertical */
+}
+
+.top.compacto .clock-container {
+  padding: 4px 10px;
+}
+
+.top.compacto .time-text {
+  font-size: 16px; /* Reduz o relógio */
+}
+
+.top.compacto .date-text {
+  font-size: 9px;
+}
+
+.top.compacto .plane {
+  font-size: 25px; /* Reduz o ícone do avião */
+}
