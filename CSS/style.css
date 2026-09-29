@@ -1,0 +1,370 @@
+/* =========================================
+   1. VARIÁVEIS GLOBAIS (Cores principais)
+   ========================================= */
+:root {
+  --navy: #17365d;
+  --text: #17324d;
+  --muted: #6b7c8f;
+  --line: #d7e2ea;
+  --yellow: #fff200;
+  --bg: #f4f7fa;
+  --white: #fff;
+}
+
+/* =========================================
+   2. RESET E TIPOGRAFIA BÁSICA
+   ========================================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+}
+
+.page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 28px;
+}
+
+/* =========================================
+   3. CABEÇALHO (Top & Brand)
+   ========================================= */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.plane {
+  font-size: 40px;
+  color: #1e5d92;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  color: var(--navy);
+}
+
+.subtitle {
+  margin-top: 5px;
+  color: #6b7c8f;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.logo {
+  max-height: 80px; 
+  width: auto; 
+  object-fit: contain;
+}
+
+/* =========================================
+   4. LAYOUT PRINCIPAL (Grid)
+   ========================================= */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 18px;
+}
+
+/* =========================================
+   5. CARDS DOS DIAS DA SEMANA
+   ========================================= */
+.day {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 12px rgba(25, 55, 80, 0.07);
+}
+
+.day-title {
+  color: white;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+  padding: 9px;
+}
+
+/* Cores específicas de cada dia */
+.blue .day-title   { background: #5b9bd5; }
+.orange .day-title { background: #ed7d31; }
+.green .day-title  { background: #70ad47; }
+.purple .day-title { background: #a64dad; }
+.teal .day-title   { background: #28a9c7; }
+
+/* =========================================
+   6. TABELAS
+   ========================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th {
+  background: var(--navy);
+  color: white;
+  padding: 10px 7px;
+  font-size: 11px;
+}
+
+td {
+  border: 1px solid var(--line);
+  padding: 9px 7px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.25;
+  background: #fff;
+}
+
+td.turno {
+  font-weight: 800;
+  background: #e8f2f9;
+  width: 9%;
+  color: var(--navy);
+}
+
+td.vip {
+  background: #fff9cc;
+  font-weight: 800;
+  color: #a45b00;
+}
+
+/* =========================================
+   7. BANNERS E DESTAQUES
+   ========================================= */
+.banner {
+  background: var(--yellow);
+  color: #c00000;
+  font-weight: 800;
+  text-align: center;
+  padding: 8px;
+  font-size: 11px;
+}
+
+.highlight {
+  background: #fff200 !important;
+}
+
+/* =========================================
+   8. BARRA LATERAL (Sidebar) & LEGENDAS
+   ========================================= */
+.side {
+  background: linear-gradient(180deg, #edf5fa, #f8fbfd);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 18px;
+  height: max-content;
+  position: sticky;
+  top: 20px;
+}
+
+.vipbox {
+  background: #ffeb52;
+  color: #7f6000;
+  font-weight: 800;
+  text-align: center;
+  padding: 12px;
+  border-radius: 9px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.side h2 {
+  font-size: 13px;
+  background: var(--navy);
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 0 0 10px;
+}
+
+.legend div {
+  font-size: 11px;
+  padding: 7px 2px;
+  border-bottom: 1px solid #dfe8ee;
+}
+
+.legend-icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  border-radius: 6px;
+  background: #e8f2f9;
+  color: #17365d;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.note {
+  margin-top: 18px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 9px;
+  font-size: 11px;
+  font-style: italic;
+  color: #52677a;
+}
+
+/* =========================================
+   9. RODAPÉ
+   ========================================= */
+.footer {
+  text-align: center;
+  color: #81909e;
+  font-size: 10px;
+  margin-top: 8px;
+}
+
+/* =========================================
+   10. RESPONSIVIDADE (Media Queries)
+   ========================================= */
+@media (max-width: 1050px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 12px;
+  }
+  .top {
+    align-items: flex-start;
+  }
+  .logo {
+    font-size: auto;
+  }
+  h1 {
+    font-size: 21px;
+  }
+  .day {
+    overflow-x: auto;
+  }
+  table {
+    min-width: 950px;
+  }
+  .side {
+    margin-bottom: 15px;
+  }
+}
+
+/* =========================================
+   11. IMPRESSÃO (Print Layout)
+   ========================================= */
+@media print {
+  body {
+    background: #fff;
+  }
+  .page {
+    max-width: none;
+    padding: 8px;
+  }
+  .top {
+    margin-bottom: 10px;
+  }
+  .layout {
+    display: block;
+  }
+  .side {
+    display: none;
+  }
+  .day {
+    box-shadow: none;
+    break-inside: avoid;
+    margin-bottom: 10px;
+  }
+  .footer {
+    display: none;
+  }
+  
+}
+/* =========================================
+   12. ESTILOS DO RELÓGIO E DESTAQUE DO DIA
+   ========================================= */
+
+/* Relógio no cabeçalho */
+.clock-container {
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 8px rgba(23, 54, 93, 0.08);
+  text-align: center;
+  margin-right: auto;
+  margin-left: 30px;
+}
+
+.date-text {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.time-text {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: 2px;
+}
+
+/* Efeito do dia atual (vai ser adicionado pelo JS) */
+.dia-destaque {
+  border: 3px solid var(--navy) !important;
+  box-shadow: 0 8px 20px rgba(23, 54, 93, 0.25) !important;
+  transform: scale(1.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Em telas pequenas, ajusta o relógio */
+@media (max-width: 700px) {
+  .clock-container {
+    margin: 15px 0 0 0;
+    width: 100%;
+  }
+  .top {
+    flex-wrap: wrap;
+  }
+}
+/* Efeito para os dias que já passaram */
+.dia-passado {
+  opacity: 0.5; /* Deixa o card meio transparente/apagado */
+  filter: grayscale(80%); /* Tira 80% das cores para dar cara de "inativo" */
+  transition: all 0.3s ease; /* Animação suave */
+}
+
+/* Opcional: Se alguém passar o mouse em cima de um dia que já passou, ele volta a ter um pouco de cor */
+.dia-passado:hover {
+  opacity: 0.9;
+  filter: grayscale(0%);
+}
