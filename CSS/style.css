@@ -19,10 +19,12 @@
 }
 
 body {
-  margin: 0;
+  margin: 0; /* Tira as bordas brancas do navegador */
+  padding: 0;
   background: var(--bg);
   font-family: Arial, Helvetica, sans-serif;
   color: var(--text);
+  overflow-x: hidden; /* Evita que a tela vá para os lados sem querer */
 }
 
 .page {
@@ -75,10 +77,48 @@ h1 {
 /* =========================================
    4. LAYOUT PRINCIPAL (Grid)
    ========================================= */
+/* Layout agora usa 100% da tela */
 .layout {
+  display: block; 
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   ESTILO DO MENU RECOLHÍVEL
+   ========================================= */
+.menu-recolhivel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(25, 55, 80, 0.05);
+}
+
+.menu-recolhivel summary {
+  padding: 15px 20px;
+  font-weight: 800;
+  color: var(--navy);
+  cursor: pointer;
+  background: #e8f2f9;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 15px;
+  transition: background 0.3s ease;
+  list-style: none; /* Tira a setinha de navegador antigo */
+}
+
+.menu-recolhivel summary:hover {
+  background: #d7e2ea;
+}
+
+.menu-conteudo {
+  padding: 20px;
+  background: linear-gradient(180deg, #edf5fa, #f8fbfd);
+  border-radius: 0 0 12px 12px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 /* =========================================
@@ -179,7 +219,10 @@ td.vip {
   background: #ffeb52;
   color: #7f6000;
   font-weight: 800;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center ;
   padding: 12px;
   border-radius: 9px;
   margin-bottom: 20px;
@@ -244,36 +287,85 @@ td.vip {
 /* =========================================
    10. RESPONSIVIDADE (Media Queries)
    ========================================= */
-@media (max-width: 1050px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .side {
-    position: static;
-  }
-}
+
+/* ... Mantenha o bloco @media(max-width: 1050px) como está ... */
 
 @media (max-width: 700px) {
+  /* Impede que o conteúdo empurre o telemóvel para os lados */
+  body {
+    overflow-x: hidden; 
+  }
+
+  /* ... mantenha o que estava aqui, e adicione: ... */
+  
+  /* Faz a cor do título e do banner acompanhar o scroll da tabela */
+  .day-title, .banner {
+    min-width: 850px; /* Tem de ser igual ao min-width da table */
+  }
+
+
+  /* Ajuste da página e do layout */
   .page {
-    padding: 12px;
+    padding: 10px;
+    width: 100vw; /* Garante que a página não fica maior que o ecrã */
+    box-sizing: border-box;
   }
+  
+  .layout {
+    gap: 15px;
+  }
+
+  /* --- AJUSTE DO CABEÇALHO PARA O CELULAR --- */
   .top {
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    padding: 10px;
   }
+
+  .brand {
+    flex-direction: column;
+    gap: 5px;
+  }
+
   .logo {
-    font-size: auto;
+    order: -1; 
+    max-height: 40px;
   }
-  h1 {
-    font-size: 21px;
+
+  h1 { font-size: 18px; }
+  .subtitle { font-size: 11px; }
+
+  .clock-container {
+    width: 90%;
+    margin: 10px auto;
   }
+
+  /* --- MAGIA DA TABELA NO CELULAR (SCROLL HORIZONTAL) --- */
   .day {
-    overflow-x: auto;
+    width: 100%;
+    /* Permite deslizar o dedo para o lado apenas no bloco da tabela */
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; /* Deixa o deslizar suave no iPhone */
+    border-radius: 10px;
   }
+  
   table {
-    min-width: 950px;
+    min-width: 850px; 
   }
+
+  .day-title, 
+  .banner {
+    min-width: 850px !important;
+  }
+
+
+  /* Ajuste das legendas */
   .side {
     margin-bottom: 15px;
+    padding: 12px;
   }
 }
 
@@ -372,6 +464,7 @@ td.vip {
    13.AJUSTE RESPONSIVO PARA CELULARES
    ========================================= */
 @media (max-width: 700px) {
+
   .page {
     padding: 12px;
   }
@@ -424,51 +517,46 @@ td.vip {
 /* =========================================
    CABEÇALHO FIXO COM EFEITO DE ENCOLHIMENTO
    ========================================= */
-.top {
+.header-fixo {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--bg); /* Fundo igual ao da página para tampar o que passa por baixo */
-  padding: 15px 10px;
+  background-color: var(--bg);
   border-bottom: 1px solid var(--line);
   box-shadow: 0 4px 12px rgba(23, 54, 93, 0.08);
-  transition: all 0.3s ease; /* Transição suave ao encolher */
+  transition: all 0.3s ease;
+  width: 100%; /* Fundo infinito de ponta a ponta */
 }
 
-/* Estado compacto (ativado via JavaScript quando rolar a página) */
-.top.compacto {
-  padding: 8px 10px;
-  background-color: rgba(244, 247, 250, 0.95); /* Levemente transparente */
-  backdrop-filter: blur(5px); /* Efeito vidro fosco */
+/* O conteúdo do cabeçalho alinhado com a página */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 15px 28px;
+  transition: all 0.3s ease;
 }
 
-/* Ajustes de tamanho quando o cabeçalho encolher no computador */
-.top.compacto .logo {
-  max-height: 35px; /* Reduz o logo */
+/* Estado compacto (ativado via JS) */
+.header-fixo.compacto {
+  background-color: rgba(244, 247, 250, 0.95);
+  backdrop-filter: blur(5px);
+}
+
+.header-fixo.compacto .top {
+  padding: 8px 28px;
+}
+
+.header-fixo.compacto .logo {
+  max-height: 35px;
   transition: max-height 0.3s ease;
 }
 
-.top.compacto h1 {
-  font-size: 20px; /* Reduz o título */
-  transition: font-size 0.3s ease;
-}
-
-.top.compacto .subtitle {
-  display: none; /* Esconde o subtítulo para economizar espaço vertical */
-}
-
-.top.compacto .clock-container {
-  padding: 4px 10px;
-}
-
-.top.compacto .time-text {
-  font-size: 16px; /* Reduz o relógio */
-}
-
-.top.compacto .date-text {
-  font-size: 9px;
-}
-
-.top.compacto .plane {
-  font-size: 25px; /* Reduz o ícone do avião */
-}
+.header-fixo.compacto h1 { font-size: 20px; transition: font-size 0.3s ease; }
+.header-fixo.compacto .subtitle { display: none; }
+.header-fixo.compacto .clock-container { padding: 4px 10px; margin-bottom: 0; }
+.header-fixo.compacto .time-text { font-size: 16px; }
+.header-fixo.compacto .date-text { font-size: 9px; }
+.header-fixo.compacto .plane { font-size: 25px; }

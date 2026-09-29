@@ -68,7 +68,7 @@ function destacarDiaAtual() {
 }
 // Efeito de encolher o cabeçalho ao rolar a página (Scroll)
 window.addEventListener('scroll', () => {
-    const headerTop = document.querySelector('.top');
+    const headerTop = document.querySelector('.header-fixo');
     
     // Se a rolagem vertical for maior que 50 pixels, ativa o modo compacto
     if (window.scrollY > 50) {
