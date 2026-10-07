@@ -85,10 +85,20 @@ async function carregarPlanilha() {
     try {
         const resposta = await fetch(urlCSV);
         const dadosCsv = await resposta.text();
-        
         const linhas = dadosCsv.split('\n');
+        
+        // Memória temporária para guardar SÓ a última semana lida
+        let ultimaSemana = {
+            'dia-1': [],
+            'dia-2': [],
+            'dia-3': [],
+            'dia-4': [],
+            'dia-5': []
+        };
+        
         let idTabelaAtual = '';
 
+        // PASSO 1: LER A PLANILHA E GUARDAR NA MEMÓRIA
         for(let i = 0; i < linhas.length; i++) {
             let linhaLimpa = linhas[i].replace('\r', '');
             if(linhaLimpa.trim() === '') continue;
@@ -100,7 +110,6 @@ async function carregarPlanilha() {
             
             const linhaTexto = linhaLimpa.toLowerCase();
 
-            // 1. Verifica primeiro se esta linha é de Manhã ou Tarde
             let indexTurno = -1;
             for(let j = 0; j < colunas.length; j++) {
                 const txt = colunas[j].toLowerCase();
@@ -110,55 +119,51 @@ async function carregarPlanilha() {
                 }
             }
 
-            // 2. Se NÃO for uma linha de Manhã/Tarde, ele procura se é um título de Dia
-            // A mágica: Ao achar o título, ele ZERA a tabela. Assim só sobra a última semana lida!
             if (indexTurno === -1) {
-                if(linhaTexto.includes('segunda')) {
-                    idTabelaAtual = 'dia-1';
-                    document.querySelector('#dia-1 table tbody').innerHTML = '';
-                } else if(linhaTexto.includes('terça') || linhaTexto.includes('terca')) {
-                    idTabelaAtual = 'dia-2';
-                    document.querySelector('#dia-2 table tbody').innerHTML = '';
-                } else if(linhaTexto.includes('quarta')) {
-                    idTabelaAtual = 'dia-3';
-                    document.querySelector('#dia-3 table tbody').innerHTML = '';
-                } else if(linhaTexto.includes('quinta')) {
-                    idTabelaAtual = 'dia-4';
-                    document.querySelector('#dia-4 table tbody').innerHTML = '';
-                } else if(linhaTexto.includes('sexta')) {
-                    idTabelaAtual = 'dia-5';
-                    document.querySelector('#dia-5 table tbody').innerHTML = '';
-                }
+                // É um título de dia! Limpamos a memória desse dia para receber a nova semana
+                if(linhaTexto.includes('segunda')) { idTabelaAtual = 'dia-1'; ultimaSemana['dia-1'] = []; }
+                else if(linhaTexto.includes('terça') || linhaTexto.includes('terca')) { idTabelaAtual = 'dia-2'; ultimaSemana['dia-2'] = []; }
+                else if(linhaTexto.includes('quarta')) { idTabelaAtual = 'dia-3'; ultimaSemana['dia-3'] = []; }
+                else if(linhaTexto.includes('quinta')) { idTabelaAtual = 'dia-4'; ultimaSemana['dia-4'] = []; }
+                else if(linhaTexto.includes('sexta')) { idTabelaAtual = 'dia-5'; ultimaSemana['dia-5'] = []; }
             } 
-            // 3. Se achou Manhã/Tarde e já sabe qual é o dia, cria a linha
             else if (idTabelaAtual !== '') {
-                const corpoTabela = document.querySelector(`#${idTabelaAtual} table tbody`);
-                
-                if(corpoTabela) {
-                    const novaLinha = document.createElement('tr');
-                    
-                    const turno = colunas[indexTurno];
-                    const emissao = colunas[indexTurno + 1] || '---';
-                    const emailGeral = colunas[indexTurno + 2] || '---';
-                    const whatsApp = colunas[indexTurno + 3] || '---';
-                    const filas = colunas[indexTurno + 4] || '---';
-                    const treinamento = colunas[indexTurno + 5] || '---';
-                    const grupos = colunas[indexTurno + 6] || '---';
-                    const configPortal = colunas[indexTurno + 7] || '---';
+                // Achou a Manhã/Tarde! Guarda as colunas exatas na memória
+                ultimaSemana[idTabelaAtual].push(colunas.slice(indexTurno)); 
+            }
+        }
 
+        // Função para pintar de amarelo se tiver asterisco (*)
+        const formatarCelula = (texto) => {
+            if(texto && texto.startsWith('*')) {
+                const textoLimpo = texto.replace('*', '').trim();
+                return `<td style="background-color: #fff200; color: #000;">${textoLimpo}</td>`;
+            }
+            return `<td>${texto || '---'}</td>`;
+        };
+
+        // PASSO 2: INJETAR A ÚLTIMA SEMANA NO HTML
+        for(let i = 1; i <= 5; i++) {
+            const corpoTabela = document.querySelector(`#dia-${i} table tbody`);
+            if(corpoTabela) {
+                corpoTabela.innerHTML = ''; // Limpa o que estava no site
+                
+                const linhasDoDia = ultimaSemana[`dia-${i}`]; // Pega os dados guardados
+                
+                linhasDoDia.forEach(colunas => {
+                    const novaLinha = document.createElement('tr');
                     novaLinha.innerHTML = `
-                        <td><b>${turno}</b></td>
-                        <td>${emissao}</td>
-                        <td>${emailGeral}</td>
-                        <td>${whatsApp}</td>
-                        <td>${filas}</td>
-                        <td>${treinamento}</td>
-                        <td>${grupos}</td>
-                        <td>${configPortal}</td>
+                        <td><b>${colunas[0] || '---'}</b></td>
+                        ${formatarCelula(colunas[1])}
+                        ${formatarCelula(colunas[2])}
+                        ${formatarCelula(colunas[3])}
+                        ${formatarCelula(colunas[4])}
+                        ${formatarCelula(colunas[5])}
+                        ${formatarCelula(colunas[6])}
+                        ${formatarCelula(colunas[7])}
                     `;
-                    
                     corpoTabela.appendChild(novaLinha);
-                }
+                });
             }
         }
     } catch (erro) {
