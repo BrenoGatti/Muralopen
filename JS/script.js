@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     destacarDiaAtual(); // Verifica qual é o dia de hoje e destaca o card
     carregarPlanilha(); // Carregar a Planilha Base
+    setInterval(carregarPlanilha, 300000); // Atualiza a cada 5 minutos a Planilha Base
 });
 // Função para destacar o dia atual da semana e apagar os anteriores
 function destacarDiaAtual() {
@@ -137,7 +138,11 @@ async function carregarPlanilha() {
         const formatarCelula = (texto) => {
             if(texto && texto.startsWith('*')) {
                 const textoLimpo = texto.replace('*', '').trim();
-                return `<td style="background-color: #fff200; color: #000;">${textoLimpo}</td>`;
+                return `<td style="background-color: #bcf6f8; color: #000;">${textoLimpo}</td>`;
+            }
+            if(texto && texto.startsWith('!')) {
+                const textoLimpo = texto.replace('!', '').trim();
+                return `<td style="background-color: #fff45b; color: #ff4141; font-weight: bold;">${textoLimpo}</td>`;
             }
             return `<td>${texto || '---'}</td>`;
         };
