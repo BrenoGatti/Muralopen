@@ -86,53 +86,66 @@ async function carregarPlanilha() {
         const resposta = await fetch(urlCSV);
         const dadosCsv = await resposta.text();
         
-        // Limpa apenas o "corpo" das tabelas no HTML para não duplicar
-        for(let i = 1; i <= 5; i++) {
-            const corpoTabela = document.querySelector(`#dia-${i} table tbody`);
-            if(corpoTabela) {
-                corpoTabela.innerHTML = ''; 
-            }
-        }
-
-        // Separa as linhas do arquivo
         const linhas = dadosCsv.split('\n');
-        
-        // Começamos do 1 para ignorar a linha de cabeçalho da planilha
-        for(let i = 1; i < linhas.length; i++) {
+        let idTabelaAtual = '';
+
+        for(let i = 0; i < linhas.length; i++) {
             let linhaLimpa = linhas[i].replace('\r', '');
             if(linhaLimpa.trim() === '') continue;
 
-            // Divide a linha pelas vírgulas, mas ignora vírgulas dentro de textos
-            const colunas = linhaLimpa.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            const colunas = linhaLimpa.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(texto => {
+                let limpo = texto ? texto.replace(/(^"|"$)/g, '').trim() : '';
+                return limpo === '' ? '---' : limpo;
+            });
             
-            // Função rápida para remover aspas que o Sheets coloca
-            const limparTexto = (texto) => texto ? texto.replace(/(^"|"$)/g, '').trim() : '---';
+            const linhaTexto = linhaLimpa.toLowerCase();
 
-            const dia = limparTexto(colunas[0]).toLowerCase();
-            const turno = limparTexto(colunas[1]);
-            const emissao = limparTexto(colunas[2]);
-            const emailGeral = limparTexto(colunas[3]);
-            const whatsApp = limparTexto(colunas[4]);
-            const filas = limparTexto(colunas[5]);
-            const treinamento = limparTexto(colunas[6]);
-            const grupos = limparTexto(colunas[7]);
-            const configPortal = limparTexto(colunas[8]);
+            // 1. Verifica primeiro se esta linha é de Manhã ou Tarde
+            let indexTurno = -1;
+            for(let j = 0; j < colunas.length; j++) {
+                const txt = colunas[j].toLowerCase();
+                if(txt === 'manhã' || txt === 'manha' || txt === 'tarde') {
+                    indexTurno = j;
+                    break;
+                }
+            }
 
-            // Descobre em qual dia da semana (id do HTML) essa linha vai entrar
-            let idTabela = '';
-            if(dia.includes('segunda')) idTabela = 'dia-1';
-            else if(dia.includes('terça') || dia.includes('terca')) idTabela = 'dia-2';
-            else if(dia.includes('quarta')) idTabela = 'dia-3';
-            else if(dia.includes('quinta')) idTabela = 'dia-4';
-            else if(dia.includes('sexta')) idTabela = 'dia-5';
-
-            if(idTabela !== '') {
-                const corpoTabela = document.querySelector(`#${idTabela} table tbody`);
+            // 2. Se NÃO for uma linha de Manhã/Tarde, ele procura se é um título de Dia
+            // A mágica: Ao achar o título, ele ZERA a tabela. Assim só sobra a última semana lida!
+            if (indexTurno === -1) {
+                if(linhaTexto.includes('segunda')) {
+                    idTabelaAtual = 'dia-1';
+                    document.querySelector('#dia-1 table tbody').innerHTML = '';
+                } else if(linhaTexto.includes('terça') || linhaTexto.includes('terca')) {
+                    idTabelaAtual = 'dia-2';
+                    document.querySelector('#dia-2 table tbody').innerHTML = '';
+                } else if(linhaTexto.includes('quarta')) {
+                    idTabelaAtual = 'dia-3';
+                    document.querySelector('#dia-3 table tbody').innerHTML = '';
+                } else if(linhaTexto.includes('quinta')) {
+                    idTabelaAtual = 'dia-4';
+                    document.querySelector('#dia-4 table tbody').innerHTML = '';
+                } else if(linhaTexto.includes('sexta')) {
+                    idTabelaAtual = 'dia-5';
+                    document.querySelector('#dia-5 table tbody').innerHTML = '';
+                }
+            } 
+            // 3. Se achou Manhã/Tarde e já sabe qual é o dia, cria a linha
+            else if (idTabelaAtual !== '') {
+                const corpoTabela = document.querySelector(`#${idTabelaAtual} table tbody`);
                 
                 if(corpoTabela) {
                     const novaLinha = document.createElement('tr');
                     
-                    // Constrói a linha igualzinho ao seu HTML original
+                    const turno = colunas[indexTurno];
+                    const emissao = colunas[indexTurno + 1] || '---';
+                    const emailGeral = colunas[indexTurno + 2] || '---';
+                    const whatsApp = colunas[indexTurno + 3] || '---';
+                    const filas = colunas[indexTurno + 4] || '---';
+                    const treinamento = colunas[indexTurno + 5] || '---';
+                    const grupos = colunas[indexTurno + 6] || '---';
+                    const configPortal = colunas[indexTurno + 7] || '---';
+
                     novaLinha.innerHTML = `
                         <td><b>${turno}</b></td>
                         <td>${emissao}</td>
@@ -151,4 +164,4 @@ async function carregarPlanilha() {
     } catch (erro) {
         console.error('Erro ao puxar dados da planilha:', erro);
     }
-} 
+}
